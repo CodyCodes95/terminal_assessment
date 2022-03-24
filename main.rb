@@ -1,8 +1,15 @@
+# GEMS
 require 'json'
 require 'httparty'
 require 'colorize'
+require "tty-prompt"
+
+# GLOBAL
+prompt = TTY::Prompt.new
+basedir = '.'
 
 
+# Class to grab JSON files from server
 class JsonGetter
     include HTTParty
     base_uri "raw.githubusercontent.com/CodyCodes95/kahoot_kompanion/master/"
@@ -10,6 +17,7 @@ class JsonGetter
         self.class.get('/scoreboard.json')
     end
 end
+
 
 class InvalidAnswerError < StandardError
     def message
@@ -47,7 +55,6 @@ def clear
 end
 
 def quiz_getter
-    basedir = '.'
     files = Dir.glob("*.json")
     i = 1
     all_quiz = []
@@ -61,7 +68,6 @@ def quiz_getter
 end
 
 def results_getter
-    basedir = '.'
     files = Dir.glob("*.json")
     i = 1
     all_results = []
@@ -203,55 +209,44 @@ end
 
 while quit == false
     clear
-    puts "Welcome to the Kahoot Kompanion! Enter what you would like to do below"
-    puts "1. View leaderboard"
-    puts "2. Quiz Menu"
-    puts "3. Exit"
-    input = gets.chomp.to_i
+    menu_selections = ["View Leaderboard", "Quiz Menu", "Exit"]
+    input = prompt.multi_select("Welcome to the Kahoot Kompanion! Enter what you would like to do below", menu_selections)
     case input
-    when 1
+    when [menu_selections[0]]
         leaderboard_menu = true
         while leaderboard_menu == true
-            puts "What would you like to do?"
-            puts "1. Placement summary"
-            puts "2. Placement details"
-            puts "3. Back"
-            choice = gets.chomp.to_i
-            if choice == 1
+            menu_selections = ["Placement summary", "Placement details", "Exit"]
+            input = prompt.multi_select("What would you like to do?", menu_selections)
+            if input == [menu_selections[0]]
                 menu = "summary"
                 clear
                 leaderboard_display(players, menu)
-            elsif choice == 2
+            elsif input == [menu_selections[1]]
                 menu = "details"
                 clear
                 leaderboard_display(players, menu)
-            elsif choice == 3
+            elsif input == [menu_selections[2]]
                 leaderboard_menu = false
-            else
-                puts "Incorrect input"
             end
         end
 
-    when 2
+    when [menu_selections[1]]
         quiz_menu = true
         while quiz_menu == true
+            menu_selections = ["Play an existing quiz", "Create a new quiz", "Back"]
             clear
-            puts "Would you like to"
-            puts "1. Play an existing quiz"
-            puts "2. Create a new quiz"
-            input = gets.chomp.to_i
-            if input == 1
+            input = prompt.multi_select("Would you like to", menu_selections)
+            if input == [menu_selections[0]]
                 clear
-                puts "Enter the quiz you would like to play"
-                quiz_getter.each_with_index { |quiz, i| puts "#{i + 1} #{quiz}" }
-                answer = gets.chomp.to_i
-                quiz_name = quiz_getter[answer - 1]
+                quiz_name = prompt.multi_select("Select the quiz you would like to play", quiz_getter)
                 quiz_loader(quiz_name)
-            elsif input == 2
+            elsif input == [menu_selections[1]]
                 quiz_maker
+            elsif input == [menu_selections[2]]
+                quiz_menu = false
             end
         end
-    when 3
+    when [menu_selections[2]]
         quit = true
     end
 end
