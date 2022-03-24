@@ -8,7 +8,6 @@ require "tty-prompt"
 prompt = TTY::Prompt.new
 basedir = '.'
 
-
 # Class to grab JSON files from server
 class JsonGetter
     include HTTParty
@@ -17,7 +16,6 @@ class JsonGetter
         self.class.get('/scoreboard.json')
     end
 end
-
 
 class InvalidAnswerError < StandardError
     def message
@@ -81,6 +79,7 @@ def results_getter
 end
 
 def quiz_loader(quiz)
+    prompt = TTY::Prompt.new
     puts "Enter your name"
     name = gets.chomp
     score = 0
@@ -95,42 +94,34 @@ def quiz_loader(quiz)
         clear
         puts question[:question]
         questions_random = [question[:correct], question[:answer2], question[:answer3], question[:answer4]].shuffle!
-        questions_random.each_with_index do |question, i|
-            puts "#{i + 1}. #{question}".colorize(:green)
-        end
+        answer = prompt.enum_select(question[:question], questions_random)
         current_question += 1
-        puts "Enter your answer"
-        answer = gets.chomp.to_i
-        if answer > 5 || answer < 1
-            raise InvalidAnswerError
+        if answer == question[:correct]
+            score += 1
+            puts "CORRECT!"
         else
-            if question[:correct] == questions_random[answer - 1]
-                score += 1
-                puts "CORRECT!"
-            else
-                puts "Wrong. The correct answer was #{question[:correct]}"
+            puts "Wrong. The correct answer was #{question[:correct]}"
+        end
+        if current_question == current_quiz.length
+            puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
+            puts "Press enter to exit"
+            gets
+            already_played = false
+            highscores.each do |person|
+                already_played = true if person[:name] == name
             end
-            if current_question == current_quiz.length
-                puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
-                puts "Press enter to exit"
-                already_played = false
+            if already_played == true
                 highscores.each do |person|
-                    already_played = true if person[:name] == name
+                    person[:score] = score if person[:name] = name
                 end
-                if already_played == true
-                    highscores.each do |person|
-                        person[:score] = score if person[:name] = name
-                    end
-                else
-                    highscores.push({ name: name, score: score })
-                end
-                File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
-                gets
             else
+                highscores.push({ name: name, score: score })
+            end
+            File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
+        else
                 puts "Your current score is #{score}/#{current_quiz.length}"
                 puts "Press enter to continue to the next question"
                 gets
-            end
         end
     end
 end
@@ -210,7 +201,8 @@ end
 while quit == false
     clear
     menu_selections = ["View Leaderboard", "Quiz Menu", "Exit"]
-    input = prompt.multi_select("Welcome to the Kahoot Kompanion! Enter what you would like to do below", menu_selections)
+    input = prompt.multi_select("Welcome to the Kahoot Kompanion! Enter what you would like to do below",
+                                menu_selections)
     case input
     when [menu_selections[0]]
         leaderboard_menu = true
@@ -239,7 +231,7 @@ while quit == false
             if input == [menu_selections[0]]
                 clear
                 quiz_name = prompt.multi_select("Select the quiz you would like to play", quiz_getter)
-                quiz_loader(quiz_name)
+                quiz_loader(quiz_name[0])
             elsif input == [menu_selections[1]]
                 quiz_maker
             elsif input == [menu_selections[2]]
