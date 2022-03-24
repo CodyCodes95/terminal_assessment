@@ -52,12 +52,33 @@ def quiz_getter
     return all_quiz
 end
 
+def results_getter
+    basedir = '.'
+    files = Dir.glob("*.json")
+    i = 1
+    all_results = []
+    files.each do |file|
+        if file.include?("results")
+            all_results.push(file)
+            i += 1
+        end
+    end
+    return all_results
+end
+
 def quiz_loader(quiz)
+    puts "Enter your name"
+    name = gets.chomp
     score = 0
     current_question = 0
+    if results_getter.any? { |e| e.include? "#{quiz.slice(0..-10)}"}
+        highscores = JSON.load_file("#{quiz.slice(0..-10)}results.json", symbolize_names: true)
+    else 
+        highscores =[]
+    end
     current_quiz = JSON.load_file(quiz.to_s, symbolize_names: true)
     current_quiz.each do |question|
-        system "clear"
+        clear
         puts question[:question]
         questions_random = [question[:correct], question[:answer2], question[:answer3], question[:answer4]].shuffle!
         questions_random.each_with_index do |question, i|
@@ -75,6 +96,22 @@ def quiz_loader(quiz)
         if current_question == current_quiz.length
             puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
             puts "Press enter to exit"
+            already_played = false
+            highscores.each do |person|
+                if person[:name] == name
+                    already_played = true
+                end
+            end
+            if already_played == true
+                highscores.each do |person|
+                    if person[:name] = name
+                        person[:score] = score
+                    end
+                end
+            else
+                highscores.push({name:name, score:score})
+            end
+            File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
             gets
         else
             puts "Your current score is #{score}/#{current_quiz.length}"
@@ -157,7 +194,7 @@ when "-help"
 end
 
 while quit == false
-    system "clear"
+    clear
     puts "Welcome to the Kahoot Kompanion! Enter what you would like to do below"
     puts "1. View leaderboard"
     puts "2. Quiz Menu"
@@ -175,11 +212,11 @@ while quit == false
             choice = gets.chomp.to_i
             if choice == 1
                 menu = "summary"
-                system "clear"
+                clear
                 leaderboard_display(players, menu)
             elsif choice == 2
                 menu = "details"
-                system "clear"
+                clear
                 leaderboard_display(players, menu)
             elsif choice == 3
                 leaderboard_menu = false
@@ -191,7 +228,7 @@ while quit == false
     when 2
         quiz_menu = true
         while quiz_menu == true
-            system "clear"
+            clear
             puts "Would you like to"
             puts "1. Play an existing quiz"
             puts "2. Create a new quiz"
