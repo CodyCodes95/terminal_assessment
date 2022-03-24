@@ -9,6 +9,12 @@ class JsonGetter
     end
 end
 
+class InvalidAnswerError < StandardError
+    def message
+        return "Answer must be a number between 1 and 4"
+    end
+end
+
 class_room = JsonGetter.new
 players = JSON.parse(class_room.getter)
 
@@ -71,11 +77,11 @@ def quiz_loader(quiz)
     name = gets.chomp
     score = 0
     current_question = 0
-    if results_getter.any? { |e| e.include? "#{quiz.slice(0..-10)}"}
-        highscores = JSON.load_file("#{quiz.slice(0..-10)}results.json", symbolize_names: true)
-    else 
-        highscores =[]
-    end
+    highscores = if results_getter.any? { |e| e.include? quiz.slice(0..-10).to_s }
+        JSON.load_file("#{quiz.slice(0..-10)}results.json", symbolize_names: true)
+                 else
+        []
+                 end
     current_quiz = JSON.load_file(quiz.to_s, symbolize_names: true)
     current_quiz.each do |question|
         clear
@@ -87,36 +93,36 @@ def quiz_loader(quiz)
         current_question += 1
         puts "Enter your answer"
         answer = gets.chomp.to_i
-        if question[:correct] == questions_random[answer - 1]
-            score += 1
-            puts "CORRECT!"
+        if answer > 5 || answer < 1
+            raise InvalidAnswerError
         else
-            puts "Wrong. The correct answer was #{question[:correct]}"
-        end
-        if current_question == current_quiz.length
-            puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
-            puts "Press enter to exit"
-            already_played = false
-            highscores.each do |person|
-                if person[:name] == name
-                    already_played = true
-                end
-            end
-            if already_played == true
-                highscores.each do |person|
-                    if person[:name] = name
-                        person[:score] = score
-                    end
-                end
+            if question[:correct] == questions_random[answer - 1]
+                score += 1
+                puts "CORRECT!"
             else
-                highscores.push({name:name, score:score})
+                puts "Wrong. The correct answer was #{question[:correct]}"
             end
-            File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
-            gets
-        else
-            puts "Your current score is #{score}/#{current_quiz.length}"
-            puts "Press enter to continue to the next question"
-            gets
+            if current_question == current_quiz.length
+                puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
+                puts "Press enter to exit"
+                already_played = false
+                highscores.each do |person|
+                    already_played = true if person[:name] == name
+                end
+                if already_played == true
+                    highscores.each do |person|
+                        person[:score] = score if person[:name] = name
+                    end
+                else
+                    highscores.push({ name: name, score: score })
+                end
+                File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
+                gets
+            else
+                puts "Your current score is #{score}/#{current_quiz.length}"
+                puts "Press enter to continue to the next question"
+                gets
+            end
         end
     end
 end
@@ -204,7 +210,6 @@ while quit == false
     when 1
         leaderboard_menu = true
         while leaderboard_menu == true
-            # puts "Please congragulate our most recent winner, #{last_winner}"
             puts "What would you like to do?"
             puts "1. Placement summary"
             puts "2. Placement details"

@@ -27,3 +27,14 @@ Once selected, the quiz player will ask the user which quiz they would like to p
 
 **Feature Three - Highscores and Leaderboards**
 
+Highscores and leaderboards are a way to view the highest scores for a particular quiz inside of the app. Each time a quiz is taken, a new entry is written to that particular quiz' results file. This stores the name of the player, and the score they achieved, and can be viewed by selecting which quiz you want to view scores for. The results files can be modified through the admin menu of the app. This is accessed by typing in -admin as an argument when running the app, then entering the password. This allows admins to update scores manually for a variety of reasons, maybe a player was found cheating and needed their score removed, for example.
+
+**Develop an implementation plan which:**
+- outlines how each feature will be implemented and a checklist of tasks for each feature
+- prioritise the implementation of different features, or checklist items within a feature
+- provide a deadline, duration or other time indicator for each feature or checklist/checklist-item
+
+**Utilise a suitable project management platform to track this implementation plan.**
+
+**Provide screenshots/images and/or a reference to an accessible project management platform used to track this implementation plan. **
+
