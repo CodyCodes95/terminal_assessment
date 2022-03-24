@@ -1,14 +1,14 @@
-**Provide a link to your source control repository**
+**Q1. Provide a link to your source control repository**
 
 https://github.com/CodyCodes95/terminal_assessment
 
-**Identify any code style guide or styling conventions that the application will adhere to.**
+**Q2. Identify any code style guide or styling conventions that the application will adhere to.**
 
 **Reference the chosen style guide appropriately.**
 
 My application will adhere to The Ruby Style Guide, found here: [Ruby Style Guide](https://rubystyle.guide/)
 
-**Develop a list of features that will be included in the application. It must include:**
+**Q3. Develop a list of features that will be included in the application. It must include:**
 - at least THREE features
 - describe each feature
 
@@ -29,7 +29,7 @@ Once selected, the quiz player will ask the user which quiz they would like to p
 
 Highscores and leaderboards are a way to view the highest scores for a particular quiz inside of the app. Each time a quiz is taken, a new entry is written to that particular quiz' results file. This stores the name of the player, and the score they achieved, and can be viewed by selecting which quiz you want to view scores for. The results files can be modified through the admin menu of the app. This is accessed by typing in -admin as an argument when running the app, then entering the password. This allows admins to update scores manually for a variety of reasons, maybe a player was found cheating and needed their score removed, for example.
 
-**Develop an implementation plan which:**
+**Q4. Develop an implementation plan which:**
 - outlines how each feature will be implemented and a checklist of tasks for each feature
 - prioritise the implementation of different features, or checklist items within a feature
 - provide a deadline, duration or other time indicator for each feature or checklist/checklist-item
@@ -38,3 +38,10 @@ Highscores and leaderboards are a way to view the highest scores for a particula
 
 **Provide screenshots/images and/or a reference to an accessible project management platform used to track this implementation plan. **
 
+**Q5. Design help documentation which includes a set of instructions which accurately describe how to use and install the application.**
+
+You must include:
+- steps to install the application
+- any dependencies required by the application to operate
+- any system/hardware requirements
+- how to use any command line arguments made for the application

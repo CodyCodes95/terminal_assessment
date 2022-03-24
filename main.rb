@@ -1,5 +1,7 @@
 require 'json'
 require 'httparty'
+require 'colorize'
+
 
 class JsonGetter
     include HTTParty
@@ -88,7 +90,7 @@ def quiz_loader(quiz)
         puts question[:question]
         questions_random = [question[:correct], question[:answer2], question[:answer3], question[:answer4]].shuffle!
         questions_random.each_with_index do |question, i|
-            puts "#{i + 1}. #{question}"
+            puts "#{i + 1}. #{question}".colorize(:green)
         end
         current_question += 1
         puts "Enter your answer"
