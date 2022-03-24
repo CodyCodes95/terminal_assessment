@@ -4,10 +4,6 @@ require 'httparty'
 require 'colorize'
 require "tty-prompt"
 
-# GLOBAL
-prompt = TTY::Prompt.new
-basedir = '.'
-
 # Class to grab JSON files from server
 class JsonGetter
     include HTTParty
@@ -17,39 +13,21 @@ class JsonGetter
     end
 end
 
+# GLOBAL
+prompt = TTY::Prompt.new
+basedir = '.'
+class_room = JsonGetter.new
+players = JSON.parse(class_room.getter)
+quit = false
+
+def clear
+    return system "clear"
+end
+
 class InvalidAnswerError < StandardError
     def message
         return "Answer must be a number between 1 and 4"
     end
-end
-
-class_room = JsonGetter.new
-players = JSON.parse(class_room.getter)
-
-def quiz_maker
-    quiz = []
-    puts "What would you like to name this quiz?"
-    name = gets.chomp
-    puts "How many questions would you like to have?"
-    quiz_length = gets.chomp.to_i
-    i = 0
-    while i < quiz_length
-        puts "What would you like your question to be?"
-        question = gets.chomp
-        puts "Enter the correct answer to your question"
-        correct_answer = gets.strip
-        puts "Enter each fake answer hitting enter between each"
-        answer2 = gets.strip
-        answer3 = gets.strip
-        answer4 = gets.strip
-        quiz.push({ question: question, correct: correct_answer, answer2: answer2, answer3: answer3, answer4: answer4 })
-        i += 1
-    end
-    File.write("#{name}_quiz.json", JSON.pretty_generate(quiz))
-end
-
-def clear
-    return system "clear"
 end
 
 def quiz_getter
@@ -76,6 +54,28 @@ def results_getter
         end
     end
     return all_results
+end
+
+def quiz_maker
+    quiz = []
+    puts "What would you like to name this quiz?"
+    name = gets.chomp
+    puts "How many questions would you like to have?"
+    quiz_length = gets.chomp.to_i
+    i = 0
+    while i < quiz_length
+        puts "What would you like your question to be?"
+        question = gets.chomp
+        puts "Enter the correct answer to your question"
+        correct_answer = gets.strip
+        puts "Enter each fake answer hitting enter between each"
+        answer2 = gets.strip
+        answer3 = gets.strip
+        answer4 = gets.strip
+        quiz.push({ question: question, correct: correct_answer, answer2: answer2, answer3: answer3, answer4: answer4 })
+        i += 1
+    end
+    File.write("#{name}_quiz.json", JSON.pretty_generate(quiz))
 end
 
 def quiz_loader(quiz)
@@ -119,9 +119,9 @@ def quiz_loader(quiz)
             end
             File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
         else
-                puts "Your current score is #{score}/#{current_quiz.length}"
-                puts "Press enter to continue to the next question"
-                gets
+            puts "Your current score is #{score}/#{current_quiz.length}"
+            puts "Press enter to continue to the next question"
+            gets
         end
     end
 end
@@ -164,30 +164,28 @@ def score_adder(first, second, third, arr)
             arr[i][4] = ((arr[i][1]) * 3) + (arr[i][2] * 2) + arr[i][3]
     end
 end
-
-quit = false
 case ARGV[0]
 when "-admin"
     ARGV.clear
     admin_menu = true
     while admin_menu == true
-    puts "Please enter the password to modify the leaderboard"
-    puts "Or type back to navigate back."
-    pw = gets.chomp
-    if pw == "plaintextpasswordlol"
-        puts "Please enter the name of todays champion"
-        champ = gets.chomp.capitalize
-        puts "Please enter todays runner up"
-        runner_up = gets.chomp.capitalize
-        puts "Enter today's third place player"
-        third = gets.chomp.capitalize
-        score_adder(champ, runner_up, third, players)
-        File.write('scoreboard.json', JSON.pretty_generate(players))
-    elsif pw == "back"
-        admin_menu = false
-    else
-        puts "Incorrect password please try again"
-    end
+        prompt = TTY::Prompt.new
+        pw = prompt.ask("Please enter the admin password, or type quit to exit", echo: false)
+        if pw == "plaintextpasswordlol"
+            puts "Please enter the name of todays champion"
+            champ = gets.chomp.capitalize
+            puts "Please enter todays runner up"
+            runner_up = gets.chomp.capitalize
+            puts "Enter today's third place player"
+            third = gets.chomp.capitalize
+            score_adder(champ, runner_up, third, players)
+            File.write('scoreboard.json', JSON.pretty_generate(players))
+        elsif pw == "quit"
+            admin_menu = false
+            quit = true
+        else
+            puts "Incorrect password please try again"
+        end
     end
     quit = true
 when "-help"
