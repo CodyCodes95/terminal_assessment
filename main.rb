@@ -164,6 +164,27 @@ def score_adder(first, second, third, arr)
             arr[i][4] = ((arr[i][1]) * 3) + (arr[i][2] * 2) + arr[i][3]
     end
 end
+
+# def score_adder(players)
+#     puts "Please enter the player in 3rd"
+#     third = gets.chomp
+#     puts "Please enter the player in 2nd"
+#     second = gets.chomp
+#     puts "Please enter todays winner"
+#     first = gets.chomp
+#     if players.any? { |s| s.include?(first) }
+#         players.each do |player|
+#             if player[:name] == first
+#                 player[:first] += 1
+#             end
+#         end
+#     else
+#         players.push({name: first, first: 1, second: 0, third: 0})
+#     end
+# end
+
+
+
 case ARGV[0]
 when "-admin"
     ARGV.clear
