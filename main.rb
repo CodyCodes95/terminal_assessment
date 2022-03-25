@@ -19,6 +19,12 @@ basedir = '.'
 class_room = JsonGetter.new
 players = JSON.parse(class_room.getter)
 quit = false
+menu_selections = [
+    {message:"Welcome to the Kahoot Kompanion! Enter what you would like to do below", selections: ["View Leaderboard", "Quiz Menu", "Exit"]},
+    {message: "What would you like to", selections: ["Play an existing quiz", "Create a new quiz", "Back"]},
+    {message: "What would you like to do?",selections:["Placement summary", "Placement details", "Exit"]}
+
+]
 
 def clear
     return system "clear"
@@ -217,47 +223,52 @@ when "-help"
     quit = true
 end
 
+def input_prompt(menu)
+    prompt = TTY::Prompt.new
+    input = prompt.multi_select(menu[:message], menu[:selections])
+    return input[0]
+end
+
 while quit == false
     clear
-    menu_selections = ["View Leaderboard", "Quiz Menu", "Exit"]
-    input = prompt.multi_select("Welcome to the Kahoot Kompanion! Enter what you would like to do below",
-                                menu_selections)
+    menu = menu_selections[0][:selections]
+    input = input_prompt(menu_selections[0])
     case input
-    when [menu_selections[0]]
+    when menu[0]
         leaderboard_menu = true
         while leaderboard_menu == true
-            menu_selections = ["Placement summary", "Placement details", "Exit"]
-            input = prompt.multi_select("What would you like to do?", menu_selections)
-            if input == [menu_selections[0]]
+            menu = menu_selections[2][:selections]
+            case input_prompt(menu_selections[2])
+            when menu[0]
                 menu = "summary"
                 clear
                 leaderboard_display(players, menu)
-            elsif input == [menu_selections[1]]
+            when menu[1]
                 menu = "details"
                 clear
                 leaderboard_display(players, menu)
-            elsif input == [menu_selections[2]]
+            when menu[2]
                 leaderboard_menu = false
             end
         end
 
-    when [menu_selections[1]]
+    when menu[1]
         quiz_menu = true
         while quiz_menu == true
-            menu_selections = ["Play an existing quiz", "Create a new quiz", "Back"]
             clear
-            input = prompt.multi_select("Would you like to", menu_selections)
-            if input == [menu_selections[0]]
+            menu = menu_selections[1][:selections]
+            case input_prompt(menu_selections[1])
+            when menu[0]
                 clear
                 quiz_name = prompt.multi_select("Select the quiz you would like to play", quiz_getter)
                 quiz_loader(quiz_name[0])
-            elsif input == [menu_selections[1]]
+            when menu[1]
                 quiz_maker
-            elsif input == [menu_selections[2]]
+            when menu[2]
                 quiz_menu = false
             end
         end
-    when [menu_selections[2]]
+    when menu[2]
         quit = true
     end
 end
