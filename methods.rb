@@ -171,6 +171,7 @@ def score_adder(players)
     else
         players.push({name: third, first: 0, second: 0, third: 1})
     end
+    return players
 end
 
 def input_prompt(menu)

@@ -5,6 +5,7 @@ require 'colorize'
 require "tty-prompt"
 require 'ruby2d'
 require './methods.rb'
+require './classes.rb'
 
 # GLOBAL
 prompt = TTY::Prompt.new
@@ -35,14 +36,8 @@ when "-admin"
         prompt = TTY::Prompt.new
         pw = prompt.ask("Please enter the admin password, or type quit to exit", echo: false)
         if pw == "plaintextpasswordlol"
-            puts "Please enter the name of todays champion"
-            champ = gets.chomp.capitalize
-            puts "Please enter todays runner up"
-            runner_up = gets.chomp.capitalize
-            puts "Enter today's third place player"
-            third = gets.chomp.capitalize
-            score_adder(champ, runner_up, third, players)
-            File.write('scoreboard.json', JSON.pretty_generate(players))
+            winners = score_adder(players)
+            File.write('scoreboard_hash.json', JSON.pretty_generate(winners))
         elsif pw == "quit"
             admin_menu = false
             quit = true
