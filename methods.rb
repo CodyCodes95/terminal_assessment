@@ -144,34 +144,39 @@ def score_adder(players)
     second = gets.chomp
     puts "Please enter todays winner"
     first = gets.chomp
-    if players.any? { |s| s.include?(first) }
-        players.each do |player|
-            if player[:name] == first
-                player[:first] += 1
-            end
+    first_played = false
+    players.each do |person|
+        first_played = true if person[:name] == first
+    end
+    if first_played == true
+        players.each do |person|
+        person[:first] +=1 if person[:name] = first
         end
     else
-        players.push({name: first, first: 1, second: 0, third: 0})
+        players.push({ name: first, first: 1 })
     end
-    if players.any? { |s| s.include?(second) }
-        players.each do |player|
-            if player[:name] == second
-                player[:second] += 1
-            end
+    second_played = false
+    players.each do |person|
+        second_played = true if person[:name] == second
+    end
+    if second_played == true
+        players.each do |person|
+        person[:second] +=1 if person[:name] = second
         end
     else
-        players.push({name: second, first: 0, second: 1, third: 0})
+        players.push({ name: second, second: 1 })
     end
-    if players.any? { |s| s.include?(third) }
-        players.each do |player|
-            if player[:name] == third
-                player[:third] += 1
-            end
+    third_played = false
+    players.each do |person|
+        third_played = true if person[:name] == third
+    end
+    if third_played == true
+        players.each do |person|
+        person[:third] +=1 if person[:name] = third
         end
     else
-        players.push({name: third, first: 0, second: 0, third: 1})
+        players.push({ name: third, third: 1 })
     end
-    return players
 end
 
 def input_prompt(menu)
