@@ -13,3 +13,9 @@ class JsonGetter
         self.class.get('/scoreboard_hash.json')
     end
 end
+
+class InvalidAnswerError < StandardError
+    def message
+        return "Answer must be a number between 1 and 4"
+    end
+end

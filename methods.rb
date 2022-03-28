@@ -52,19 +52,19 @@ end
 
 def quiz_loader(quiz)
     prompt = TTY::Prompt.new
-    puts "Enter your name"
-    name = gets.chomp
-    score = 0
-    current_question = 0
     highscores = if results_getter.any? { |e| e.include? quiz.slice(0..-10).to_s }
         JSON.load_file("#{quiz.slice(0..-10)}results.json", symbolize_names: true)
                  else
         []
                  end
+    puts "Enter your name"
+    name = gets.chomp
+    # INSERT ERROR IF NAME ALREADY EXISTS IN HIGHSCORE
+    score = 0
+    current_question = 0
     current_quiz = JSON.load_file(quiz.to_s, symbolize_names: true)
     current_quiz.each do |question|
         clear_term
-        puts question[:question]
         questions_random = [question[:correct], question[:answer2], question[:answer3], question[:answer4]].shuffle!
         answer = prompt.enum_select(question[:question], questions_random)
         current_question += 1
@@ -137,7 +137,7 @@ end
 #     end
 # end
 
-def score_adder(players)
+def score_adder(players, class_room)
     puts "Please enter the player in 3rd"
     third = gets.chomp
     puts "Please enter the player in 2nd"

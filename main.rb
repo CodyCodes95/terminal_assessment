@@ -11,25 +11,22 @@ require './classes.rb'
 prompt = TTY::Prompt.new
 basedir = '.'
 song = Music.new('song.mp3')
-class_room = JsonGetter.new
-players = JSON.parse(class_room.get_hash, symbolize_names:true )
+
+# class_room = JsonGetter.new
+# players = JSON.parse(class_room.get_hash, symbolize_names:true)
 quit = false
 menu_selections = [
   { message: "Welcome to the Kahoot Kompanion! Enter what you would like to do below",
-    selections: ["View Leaderboard", "Quiz Menu", "Exit"] },
+    selections: ["Quiz Menu", "View Leaderboard", "Exit"] },
   { message: "What would you like to", selections: ["Play an existing quiz", "Create a new quiz", "Back"] },
-  { message: "What would you like to do?", selections: ["Placement summary", "Placement details", "Exit"] }
+  { message: "What would you like to do?", selections: ["Placement summary", "Placement details", "Exit"] },
+  {message: "Which class would you like to view?", selections:["Standard", "Accelerated"]}
 
 ]
 
-class InvalidAnswerError < StandardError
-    def message
-        return "Answer must be a number between 1 and 4"
-    end
-end
-
 case ARGV[0]
 when "-admin"
+    clear_term
     ARGV.clear
     admin_menu = true
     while admin_menu == true
@@ -46,6 +43,7 @@ when "-admin"
         end
     end
     quit = true
+
 when "-help"
     ARGV.clear
     puts "Go find some help"
@@ -60,24 +58,6 @@ while quit == false
     menu = menu_selections[0][:selections]
     case input_prompt(menu_selections[0])
     when menu[0]
-        leaderboard_menu = true
-        while leaderboard_menu == true
-            menu = menu_selections[2][:selections]
-            case input_prompt(menu_selections[2])
-            when menu[0]
-                menu = "summary"
-                clear_term
-                leaderboard_display(players, menu)
-            when menu[1]
-                menu = "details"
-                clear_term
-                leaderboard_display(players, menu)
-            when menu[2]
-                leaderboard_menu = false
-            end
-        end
-
-    when menu[1]
         quiz_menu = true
         while quiz_menu == true
             clear_term
@@ -93,6 +73,25 @@ while quit == false
                 quiz_menu = false
             end
         end
+    when menu[1]
+        leaderboard_menu = true
+        while leaderboard_menu == true
+            menu = menu_selections[2][:selections]
+            players = JSON.load_file("#{input_prompt(menu_selections[3]).downcase}.json")
+            case input_prompt(menu_selections[2])
+            when menu[0]
+                menu = "summary"
+                clear_term
+                leaderboard_display(players, menu)
+            when menu[1]
+                menu = "details"
+                clear_term
+                leaderboard_display(players, menu)
+            when menu[2]
+                leaderboard_menu = false
+            end
+        end
+
     when menu[2]
         quit = true
     end
