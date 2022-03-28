@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "name": "cody",
+    "first": 1
+  },
+  {
+    "name": "y",
+    "second": 1
+  },
+  {
+    "name": "u",
+    "third": 1
+  }
+]
