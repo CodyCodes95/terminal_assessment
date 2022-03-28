@@ -3,6 +3,7 @@ require 'json'
 require 'httparty'
 require 'colorize'
 require "tty-prompt"
+require 'ruby2d'
 
 # Class to grab JSON files from server
 class JsonGetter
@@ -16,13 +17,15 @@ end
 # GLOBAL
 prompt = TTY::Prompt.new
 basedir = '.'
+song = Music.new('song.mp3')
 class_room = JsonGetter.new
 players = JSON.parse(class_room.getter)
 quit = false
 menu_selections = [
-    {message:"Welcome to the Kahoot Kompanion! Enter what you would like to do below", selections: ["View Leaderboard", "Quiz Menu", "Exit"]},
-    {message: "What would you like to", selections: ["Play an existing quiz", "Create a new quiz", "Back"]},
-    {message: "What would you like to do?",selections:["Placement summary", "Placement details", "Exit"]}
+  { message: "Welcome to the Kahoot Kompanion! Enter what you would like to do below",
+    selections: ["View Leaderboard", "Quiz Menu", "Exit"] },
+  { message: "What would you like to", selections: ["Play an existing quiz", "Create a new quiz", "Back"] },
+  { message: "What would you like to do?", selections: ["Placement summary", "Placement details", "Exit"] }
 
 ]
 
@@ -189,8 +192,6 @@ end
 #     end
 # end
 
-
-
 case ARGV[0]
 when "-admin"
     ARGV.clear
@@ -232,8 +233,7 @@ end
 while quit == false
     clear
     menu = menu_selections[0][:selections]
-    input = input_prompt(menu_selections[0])
-    case input
+    case input_prompt(menu_selections[0])
     when menu[0]
         leaderboard_menu = true
         while leaderboard_menu == true
