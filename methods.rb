@@ -150,8 +150,10 @@ def score_adder(players)
     end
     if first_played == true
         players.each do |person|
-        person[:first] +=1 if person[:name] = first
+        if person[:name] = first
+            person[:first] = person[:first].to_i + 1
         end
+    end
     else
         players.push({ name: first, first: 1 })
     end

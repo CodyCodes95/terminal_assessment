@@ -12,7 +12,7 @@ prompt = TTY::Prompt.new
 basedir = '.'
 song = Music.new('song.mp3')
 class_room = JsonGetter.new
-players = JSON.parse(class_room.get_hash)
+players = JSON.parse(class_room.get_hash, symbolize_names:true )
 quit = false
 menu_selections = [
   { message: "Welcome to the Kahoot Kompanion! Enter what you would like to do below",
