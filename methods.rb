@@ -172,3 +172,9 @@ def score_adder(players)
         players.push({name: third, first: 0, second: 0, third: 1})
     end
 end
+
+def input_prompt(menu)
+    prompt = TTY::Prompt.new
+    input = prompt.multi_select(menu[:message], menu[:selections])
+    return input[0]
+end

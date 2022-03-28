@@ -6,21 +6,12 @@ require "tty-prompt"
 require 'ruby2d'
 require './methods.rb'
 
-# Class to grab JSON files from server
-class JsonGetter
-    include HTTParty
-    base_uri "raw.githubusercontent.com/CodyCodes95/kahoot_kompanion/master/"
-    def getter
-        self.class.get('/scoreboard.json')
-    end
-end
-
 # GLOBAL
 prompt = TTY::Prompt.new
 basedir = '.'
 song = Music.new('song.mp3')
 class_room = JsonGetter.new
-players = JSON.parse(class_room.getter)
+players = JSON.parse(class_room.get)
 quit = false
 menu_selections = [
   { message: "Welcome to the Kahoot Kompanion! Enter what you would like to do below",
@@ -66,12 +57,6 @@ when "-help"
     puts "Press enter to quit"
     gets
     quit = true
-end
-
-def input_prompt(menu)
-    prompt = TTY::Prompt.new
-    input = prompt.multi_select(menu[:message], menu[:selections])
-    return input[0]
 end
 
 while quit == false
