@@ -7,7 +7,7 @@ class JsonGetter
         self.class.get('/class_test.json')
     end
     def get
-        self.class.get('/scoreboard.json')
+        self.class.get('/accelerated.json')
     end
 end
 
