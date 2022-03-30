@@ -9,13 +9,16 @@ class JsonGetter
     def get
         self.class.get('/scoreboard.json')
     end
-    def get_hash
-        self.class.get('/scoreboard_hash.json')
-    end
 end
 
 class InvalidAnswerError < StandardError
     def message
         return "Answer must be a number between 1 and 4"
+    end
+end
+
+class AlreadyPlayedError < StandardError
+    def message
+        return "You have already played this quiz! Please enter a different name"
     end
 end

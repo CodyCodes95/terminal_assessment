@@ -1,3 +1,5 @@
+require './classes.rb'
+
 def clear_term
     system"clear"
 end
@@ -59,7 +61,12 @@ def quiz_loader(quiz)
                  end
     puts "Enter your name"
     name = gets.chomp
-    # INSERT ERROR IF NAME ALREADY EXISTS IN HIGHSCORE
+    already_played = false
+     highscores.each do |person|
+        already_played = true if person[:name] == name
+    end
+    raise(AlreadyPlayedError) if already_played == true
+        puts "You've already played this quiz!"
     score = 0
     current_question = 0
     current_quiz = JSON.load_file(quiz.to_s, symbolize_names: true)
@@ -78,17 +85,7 @@ def quiz_loader(quiz)
             puts "Quiz finished! You scored #{score} out of #{current_quiz.length}."
             puts "Press enter to exit"
             gets
-            already_played = false
-            highscores.each do |person|
-                already_played = true if person[:name] == name
-            end
-            if already_played == true
-                highscores.each do |person|
-                    person[:score] = score if person[:name] = name
-                end
-            else
-                highscores.push({ name: name, score: score })
-            end
+            highscores.push({ name: name, score: score })
             File.write("#{quiz.slice(0..-10)}results.json", JSON.pretty_generate(highscores))
         else
             puts "Your current score is #{score}/#{current_quiz.length}"
@@ -109,77 +106,77 @@ def leaderboard_display(arr, menu)
     end
 end
 
-# def score_adder(first, second, third, arr)
-#     if arr.any? { |s| s.include?(first) }
-#     arr.each_with_index do |_player, i|
-#         arr[i][1] += 1 if arr[i].include?(first)
-#     end
-#     else
-#         arr.push([first, 1, 0, 0, 0])
-#     end
-#     if arr.any? { |s| s.include?(second) }
-#     arr.each_with_index do |_player, i|
-#         arr[i][2] += 1 if arr[i].include?(second)
-#     end
-#     else
-#         arr.push([second, 0, 1, 0, 0])
-#     end
-#     if arr.any? { |s| s.include?(third) }
-#     arr.each_with_index do |_player, i|
-#         arr[i][3] += 1 if arr[i].include?(third)
-#     end
-#     else
-#         arr.push([third, 0, 0, 1, 0])
-#     end
+def score_adder(first, second, third, arr)
+    if arr.any? { |s| s.include?(first) }
+    arr.each_with_index do |_player, i|
+        arr[i][1] += 1 if arr[i].include?(first)
+    end
+    else
+        arr.push([first, 1, 0, 0, 0])
+    end
+    if arr.any? { |s| s.include?(second) }
+    arr.each_with_index do |_player, i|
+        arr[i][2] += 1 if arr[i].include?(second)
+    end
+    else
+        arr.push([second, 0, 1, 0, 0])
+    end
+    if arr.any? { |s| s.include?(third) }
+    arr.each_with_index do |_player, i|
+        arr[i][3] += 1 if arr[i].include?(third)
+    end
+    else
+        arr.push([third, 0, 0, 1, 0])
+    end
 
-#     arr.each_with_index do |_player, i|
-#             arr[i][4] = ((arr[i][1]) * 3) + (arr[i][2] * 2) + arr[i][3]
-#     end
-# end
-
-def score_adder(players, class_room)
-    puts "Please enter the player in 3rd"
-    third = gets.chomp
-    puts "Please enter the player in 2nd"
-    second = gets.chomp
-    puts "Please enter todays winner"
-    first = gets.chomp
-    first_played = false
-    players.each do |person|
-        first_played = true if person[:name] == first
-    end
-    if first_played == true
-        players.each do |person|
-        if person[:name] = first
-            person[:first] = person[:first].to_i + 1
-        end
-    end
-    else
-        players.push({ name: first, first: 1 })
-    end
-    second_played = false
-    players.each do |person|
-        second_played = true if person[:name] == second
-    end
-    if second_played == true
-        players.each do |person|
-        person[:second] +=1 if person[:name] = second
-        end
-    else
-        players.push({ name: second, second: 1 })
-    end
-    third_played = false
-    players.each do |person|
-        third_played = true if person[:name] == third
-    end
-    if third_played == true
-        players.each do |person|
-        person[:third] +=1 if person[:name] = third
-        end
-    else
-        players.push({ name: third, third: 1 })
+    arr.each_with_index do |_player, i|
+            arr[i][4] = ((arr[i][1]) * 3) + (arr[i][2] * 2) + arr[i][3]
     end
 end
+
+# def score_adder(players, class_room)
+#     puts "Please enter the player in 3rd"
+#     third = gets.chomp
+#     puts "Please enter the player in 2nd"
+#     second = gets.chomp
+#     puts "Please enter todays winner"
+#     first = gets.chomp
+#     first_played = false
+#     players.each do |person|
+#         first_played = true if person[:name] == first
+#     end
+#     if first_played == true
+#         players.each do |person|
+#         if person[:name] = first
+#             person[:first] = person[:first].to_i + 1
+#         end
+#     end
+#     else
+#         players.push({ name: first, first: 1 })
+#     end
+#     second_played = false
+#     players.each do |person|
+#         second_played = true if person[:name] == second
+#     end
+#     if second_played == true
+#         players.each do |person|
+#         person[:second] +=1 if person[:name] = second
+#         end
+#     else
+#         players.push({ name: second, second: 1 })
+#     end
+#     third_played = false
+#     players.each do |person|
+#         third_played = true if person[:name] == third
+#     end
+#     if third_played == true
+#         players.each do |person|
+#         person[:third] +=1 if person[:name] = third
+#         end
+#     else
+#         players.push({ name: third, third: 1 })
+#     end
+# end
 
 def input_prompt(menu)
     prompt = TTY::Prompt.new
