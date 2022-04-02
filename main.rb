@@ -15,11 +15,11 @@ class_room = JsonGetter.new
 players = JSON.parse(class_room.get, symbolize_names:true)
 quit = false
 menu_selections = [
-  { message: "Welcome to the Kahoot Kompanion! Enter what you would like to do below",
+  { message: "Welcome to the Quiz Queeper! Enter what you would like to do below",
     selections: ["Quiz Menu", "View Leaderboard", "Exit"] },
   { message: "What would you like to", selections: ["Play an existing quiz", "Create a new quiz", "Back"] },
   { message: "What would you like to do?", selections: ["Placement summary", "Placement details", "Exit"] },
-  { message: "Which class would you like to view?", selections: %w[Standard Accelerated] },
+  { message: "Which class would you like to view?", selections: ["Standard", "Accelerated", "Exit"] },
   { message: "What would you like to do?",
     selections: ["Change class", "Add daily winners", "Modify daily leaderboard", "Modify highscores"] }
 ]

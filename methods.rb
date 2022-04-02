@@ -4,6 +4,13 @@ def clear_term
     system"clear"
 end
 
+def input_prompt(menu)
+    prompt = TTY::Prompt.new
+    input = prompt.multi_select(menu[:message], menu[:selections])
+    return input[0]
+end
+
+
 def quiz_getter
     files = Dir.glob("*.json")
     i = 1
@@ -177,9 +184,3 @@ end
 #         players.push({ name: third, third: 1 })
 #     end
 # end
-
-def input_prompt(menu)
-    prompt = TTY::Prompt.new
-    input = prompt.multi_select(menu[:message], menu[:selections])
-    return input[0]
-end
