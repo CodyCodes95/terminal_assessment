@@ -45,3 +45,17 @@ You must include:
 - any dependencies required by the application to operate
 - any system/hardware requirements
 - how to use any command line arguments made for the application
+
+**Required Programs**
+
+<li> Ruby
+<li> Bundler
+
+**Instructions**
+
+Ensure all files remain in the same directory. Navigate to the directory in your terminal. Before running the application, you will need to run the `bundle install` command. Once ran, all dependencies will be installed allowing the program to run. Running `ruby main.rb` will run the main program.
+
+**Arguments**
+
+`ruby main.rb -admin` : Run the admin section of the app
+`ruby main.rb -help` : Displays app specific instructions.

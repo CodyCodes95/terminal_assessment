@@ -1,0 +1,23 @@
+[
+  {
+    "question": "What is Ruby?",
+    "correct": "A programming language",
+    "answer2": "A rock",
+    "answer3": "An item in Runescape",
+    "answer4": "A cat name"
+  },
+  {
+    "question": "Coder Academy Is",
+    "correct": "A learning institution",
+    "answer2": "A cafe",
+    "answer3": "A library",
+    "answer4": "A car"
+  },
+  {
+    "question": "How many letters in the word arghhhh",
+    "correct": "7",
+    "answer2": "5",
+    "answer3": "6",
+    "answer4": "b"
+  }
+]

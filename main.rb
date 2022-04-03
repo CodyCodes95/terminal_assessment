@@ -10,7 +10,7 @@ require './classes'
 # GLOBAL
 prompt = TTY::Prompt.new
 basedir = '.'
-song = Music.new('song.mp3')
+# song = Music.new('song.mp3')
 class_room = JsonGetter.new
 players = JSON.parse(class_room.get, symbolize_names:true)
 quit = false
@@ -36,7 +36,7 @@ when "-admin"
             menu = menu_selections[4][:selections]
             case input_prompt(menu_selections[4])
             when menu[0]
-
+            
             when menu[1]
             puts "Please enter the name of todays champion"
             champ = gets.chomp.capitalize
@@ -62,10 +62,10 @@ when "-admin"
 
 when "-help"
     ARGV.clear
-    puts "Go find some help"
-    puts "Press enter to quit"
+    puts "The Quiz Queeper is an application to make quiz's and play them back."
+    puts "Navigate the menu's using the arrow keys, making a selection using space, and press enter to confirm the selection"
+    puts "Press enter to continue to the app"
     gets
-    quit = true
 end
 
 while quit == false
