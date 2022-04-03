@@ -38,6 +38,8 @@ Highscores and leaderboards are a way to view the highest scores for a particula
 
 **Provide screenshots/images and/or a reference to an accessible project management platform used to track this implementation plan. **
 
+https://github.com/CodyCodes95/terminal_assessment/projects/2
+
 **Q5. Design help documentation which includes a set of instructions which accurately describe how to use and install the application.**
 
 You must include:
